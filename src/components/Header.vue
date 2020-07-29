@@ -11,7 +11,7 @@
     </nav>
     <div class="w-40">
       <ul class="flex justify-between text-gray-700">
-        <li><a href="#">End Day</a></li>
+        <li><a href="#" @click="endDay">End Day</a></li>
         <li class="relative" @mouseenter="menuSaveLoad = true" @mouseleave="menuSaveLoad = false">
           <a href="#">Save & Load</a>
           <ul v-if="menuSaveLoad" class="p-3 absolute right-0 bg-gray-200 text-sm">
@@ -25,11 +25,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {
       isOpen: false,
       menuSaveLoad: false
+    }
+  },
+  methods: {
+    ...mapActions('stocks', ['randomizeStocks']),
+    endDay() {
+      this.randomizeStocks();
     }
   }
 };
