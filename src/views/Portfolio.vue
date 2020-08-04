@@ -1,8 +1,9 @@
 <template>
   <div class="flex justify-around flex-wrap">
-    <appStock class="m-6 mb-0" v-for="stock in stocks" :key="stock.id" :stock="stock" />
+    <app-stock class="m-6 mb-0" v-for="stock in stocks" :key="stock.id" :stock="stock" />
   </div>
 </template>
+
 <script>
 import { mapGetters } from 'vuex';
 import Stock from "../components/portfolio/Stock.vue";
