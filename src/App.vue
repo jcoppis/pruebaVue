@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-header />
+    <app-header v-if="isLoggedIn" />
     <hr />
     <transition name="slide" mode="out-in">
       <router-view />
@@ -9,18 +9,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Header from "./components/Header.vue";
 export default {
   components: {
     appHeader: Header
   },
-  created() {
-    this.$store.dispatch('stocks/setStocks');
+  computed: {
+    ...mapGetters('auth', ['isLoggedIn'])
   }
 };
 </script>
 
-<style scoped>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   .slide-enter-active {
     animation: slide-in 200ms ease-out forwards;
   }

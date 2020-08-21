@@ -3,8 +3,14 @@ import App from './App.vue'
 import './assets/tailwind.css'
 import router from './router'
 import store from './store/store';
+import { Axios } from './axios-auth';
 
 Vue.config.productionTip = false
+
+const token = localStorage.getItem('token');
+if(token) {
+  Axios.defaults.headers.common['Authorization'] = token;
+}
 
 new Vue({
   router,
