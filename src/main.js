@@ -7,10 +7,13 @@ import { Axios } from './axios-auth';
 
 Vue.config.productionTip = false
 
-const token = localStorage.getItem('token');
-if(token) {
-  Axios.defaults.headers.common['Authorization'] = token;
-}
+Axios.interceptors.response.use((res) => {
+  return res
+}, (err) => {
+  if(err.response.status === 401) {
+    store.dispatch('auth/logout');
+  }
+});
 
 new Vue({
   router,

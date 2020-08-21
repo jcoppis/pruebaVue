@@ -97,6 +97,7 @@ const actions = {
       dispatch('logout');
     }
     const userId = localStorage.getItem('userId');
+    Axios.defaults.headers.common['Authorization'] = token;
     commit('setUser', {
       token,
       userId,
