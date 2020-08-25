@@ -1,22 +1,23 @@
 <template>
   <div class="w-full max-w-xs">
     <form @submit.prevent="login" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+      <div class="mb-8 relative">
+        <label :class="{ 'text-red-500': $v.email.$error, 'text-blue-500': !$v.email.$invalid }" class="block text-gray-700 text-sm font-bold mb-2" for="username">
           Username
         </label>
-        <input v-model="email" @focus="emailSelected = true" @blur="emailSelected = false" :class="{ 'border-red-500': !checkEmail, 'mb-2': !checkEmail, 'mb-4': checkEmail }" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username or E-mail">
-        <p v-show="!checkEmail" class="text-red-500 text-xs italic">Please choose a username or e-mail.</p>
+        <input v-model="email" @blur="$v.email.$touch()" :class="{ 'border-red-500': $v.email.$error }" class="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none" id="username" type="text" placeholder="Username or E-mail">
+        <p v-show="$v.email.$error" class="absolute text-red-500 text-xs italic">The username must have at least {{ $v.email.$params.minLength.min }} charaters.</p>
       </div>
-      <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+      <div class="mb-8 relative">
+        <label :class="{ 'text-red-500': $v.password.$error, 'text-blue-500': !$v.password.$invalid }" class="block text-gray-700 text-sm font-bold mb-2" for="password">
           Password
         </label>
-        <input v-model="password" @focus="passwordSelected = true" @blur="passwordSelected = false" :class="{ 'border-red-500': !checkPassword, 'mb-2': !checkPassword, 'mb-6': checkPassword }" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************">
-        <p v-show="!checkPassword" class="text-red-500 text-xs italic">Please choose a password.</p>
+        <input v-model="password" @blur="$v.password.$touch()" :class="{ 'border-red-500': $v.password.$error }" class="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none" id="password" type="password" placeholder="**********">
+        <p v-if="!$v.password.minLength" class="absolute text-red-500 text-xs italic">The password must have at least {{ $v.password.$params.minLength.min }} charaters.</p>
+        <p v-else-if="$v.password.$error" class="absolute text-red-500 text-xs italic">Please choose a password.</p>
       </div>
       <div class="flex items-center justify-between">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+        <button :disabled="$v.$invalid" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-75" type="submit">
           Log In
         </button>
         <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
@@ -31,33 +32,33 @@
 </template>
 
 <script>
+import { required, minLength } from 'vuelidate/lib/validators';
 export default {
   data() {
     return {
       email: null,
-      emailSelected: true,
       password: null,
-      passwordSelected: true
     };
   },
-  computed: {
-    checkPassword() {
-      return this.password || this.passwordSelected;
+  validations: {
+    email: {
+      required,
+      minLength: minLength(6),
+      unique: (val) => {
+        return val === 'test@test.com'; //sacar de aca y usar para checkear mail en la pantalla de signup
+      }
     },
-    checkEmail() {
-      return this.email || this.emailSelected;
+    password: {
+      required,
+      minLength: minLength(6)
     }
   },
   methods: {
     login() {
       const redirectTo = this.$route.query.redirect || '/';
-      this.emailSelected = false;
-      this.passwordSelected = false;
-      if(this.email && this.password) {
-        this.$store.dispatch('auth/login', { email: this.email, password: this.password })
-          .then(() => this.$router.replace(redirectTo))
-          .catch(() => {});
-      }
+      this.$store.dispatch('auth/login', { email: this.email, password: this.password })
+        .then(() => this.$router.replace(redirectTo))
+        .catch(() => {});
     },
   }
 }

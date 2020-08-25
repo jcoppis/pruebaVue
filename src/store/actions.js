@@ -1,4 +1,4 @@
-import { Axios } from '../axios-auth';
+import { Axios } from '@/axios-auth';
 
 export const loadData = async ({ commit, rootGetters }) => {
   const token = rootGetters['auth/user'].token;

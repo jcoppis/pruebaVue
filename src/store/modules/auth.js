@@ -1,5 +1,5 @@
-import { AuthInstance, Axios } from '../../axios-auth';
-import router from '../../router';
+import { AuthInstance, Axios } from '@/axios-auth';
+import router from '@/router';
 
 const API_KEY =  'AIzaSyDJTXOu4aa-ulHi1ihzU-dzXac9ccBFUZg';
 

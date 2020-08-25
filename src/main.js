@@ -3,7 +3,10 @@ import App from './App.vue'
 import './assets/tailwind.css'
 import router from './router'
 import store from './store/store';
+import Vuelidate from 'vuelidate';
 import { Axios } from './axios-auth';
+
+Vue.use(Vuelidate);
 
 Vue.config.productionTip = false
 

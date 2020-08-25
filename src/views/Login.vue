@@ -6,7 +6,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Login from '../components/auth/login.vue';
+import Login from '@/components/auth/login.vue';
 export default {
   components: {
     appLogin: Login
